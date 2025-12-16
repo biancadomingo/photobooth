@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Rhythm Game</title>
 
   <style>
@@ -10,149 +10,191 @@
       color: white;
       font-family: Arial, sans-serif;
       text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #controls {
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
     #game {
-      position: fixed;
-      right: 90px;
-      top: 150px;
+      position: relative;
+      margin: 0 auto;
       width: 360px;
-      height: 700px;
+      height: 600px;
       border: 2px solid white;
       overflow: hidden;
+      background: #000000;
     }
 
     .lane {
       position: absolute;
       width: 90px;
       height: 100%;
-      border-left: 1px solid gray;
+      border-left: 1px solid #444;
+      box-sizing: border-box;
     }
 
-    /* HEART NOTE */
-    .note {
-      position: absolute;
-      width: 32px;
-      height: 32px;
-      background-image: url("heart.png"); /* your pink heart image */
-      background-size: contain;
-      background-repeat: no-repeat;
-      image-rendering: pixelated;
-      top: -32px;
+    .lane:last-child {
+      border-right: 1px solid #444;
     }
 
     .hitline {
       position: absolute;
-      bottom: 100px;
+      bottom: 90px;
       width: 100%;
       height: 2px;
       background: red;
+    }
+
+    /* Falling heart note */
+    .note {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      top: -32px;
+      background-image: url("heart.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      image-rendering: pixelated;
+      color: pink;               /* fallback heart character */
+      font-size: 24px;
+      text-align: center;
+      line-height: 32px;
+    }
+
+    #keys {
+      margin-top: 10px;
+      font-size: 20px;
+      letter-spacing: 8px;
+    }
+
+    #song {
+      margin-top: 15px;
     }
   </style>
 </head>
 
 <body>
+  <h1>Rhythm Game</h1>
+  <div id="keys">A &nbsp; S &nbsp; L &nbsp; ;</div>
 
-  <h2>A&nbsp; S&nbsp; L&nbsp; ;</h2>
-
-  <button onclick="play()">Play</button>
-  <button onclick="record()">Record</button>
-  <button onclick="exportChart()">Export Chart</button>
-  <button onclick="song.play()">Test Song</button>
+  <div id="controls">
+    <button onclick="startPlay()">Play</button>
+    <button onclick="startRecord()">Record</button>
+    <button onclick="exportChart()">Export Chart</button>
+    <button onclick="song.play()">Test Song</button>
+  </div>
 
   <div id="game">
     <div class="hitline"></div>
   </div>
 
-  <!-- song.mp3 must be in the same folder as this HTML file -->
+  <!-- IMPORTANT: song.mp3 must be in the SAME FOLDER as this file -->
   <audio id="song" src="song.mp3" controls></audio>
 
   <script>
     // ==========================
-    // GLOBAL VARIABLES
+    // GLOBALS
     // ==========================
-
     const song = document.getElementById("song");
+    const game = document.getElementById("game");
 
-    let songTime = 0;          // current time in song
-    let isCharting = false;    // charting mode
-    let notes = [];            // recorded chart data
+    let isRecording = false;
+    let notes = [];          // { time: Number, lane: 0-3 }
 
     const lanes = [0, 1, 2, 3];
     const keys = { a: 0, s: 1, l: 2, ";": 3 };
-    const speed = 300;         // pixels per second the notes fall
-    const travelDistance = 600; // px from spawn to hitline (top -> 600px)
-    const travelTime = travelDistance / speed; // seconds to reach hitline
 
-    const game = document.getElementById("game");
+    const laneWidth = 90;
+    const noteSize = 32;
+    const speed = 300;           // pixels per second
+    const travelDistance = 510;  // px from spawn to hit line
+    const travelTime = travelDistance / speed; // seconds
 
     // ==========================
-    // CREATE LANES
+    // SETUP LANES
     // ==========================
-    lanes.forEach(lane => {
+    lanes.forEach((lane) => {
       const div = document.createElement("div");
       div.className = "lane";
-      div.style.left = (lane * 90) + "px";
+      div.style.left = lane * laneWidth + "px";
       game.appendChild(div);
     });
 
     // ==========================
-    // PLAY MODE
+    // PLAY CHART
     // ==========================
-    function play() {
+    function startPlay() {
       if (notes.length === 0) {
-        alert("No notes recorded yet! Click Record and chart with A S L ;");
+        alert("No notes recorded yet. Click Record and use A S L ; while song plays.");
         return;
       }
+
+      console.log("PLAY: using notes:", notes);
 
       song.currentTime = 0;
       song.play();
 
-      notes.forEach(note => {
-        // note.time is when it should hit the hitline
-        const spawnTime = note.time - travelTime;  // when it must appear
-        const delay = Math.max(0, spawnTime * 1000);
+      notes.forEach((note) => {
+        // note.time is when the heart should HIT the red line
+        const spawnTime = note.time - travelTime;
+        const delay = Math.max(0, spawnTime * 1000); // ms
 
         setTimeout(() => {
-          spawnNote(note);
+          spawnNote(note.lane);
         }, delay);
       });
     }
 
     // ==========================
-    // RECORD MODE
+    // RECORD CHART
     // ==========================
-    function record() {
+    function startRecord() {
       notes = [];
-      isCharting = true;
+      isRecording = true;
+      console.log("RECORD: started");
       song.currentTime = 0;
       song.play();
     }
 
-    // Stop recording when song ends
-    song.onended = () => {
-      isCharting = false;
-    };
+    song.addEventListener("ended", () => {
+      if (isRecording) {
+        isRecording = false;
+        console.log("RECORD: stopped, notes:", notes);
+        alert("Recording finished! Press Play to see the hearts fall.");
+      }
+    });
 
     // ==========================
-    // SPAWN NOTES
+    // SPAWN A NOTE
     // ==========================
-    function spawnNote(note) {
+    function spawnNote(lane) {
       const el = document.createElement("div");
       el.className = "note";
 
-      // center the heart in the lane (lane width 90px, heart 32px)
-      const laneLeft = note.lane * 90;
-      const heartLeft = laneLeft + (90 - 32) / 2;
-      el.style.left = heartLeft + "px";
-      el.style.top = "-32px";
+      // center note in lane
+      const laneLeft = lane * laneWidth;
+      const left = laneLeft + (laneWidth - noteSize) / 2;
+      el.style.left = left + "px";
+
+      // fallback heart character in case heart.png isn't found
+      el.textContent = "♥";
+
       game.appendChild(el);
 
       const start = performance.now();
 
-      function move(time) {
-        const elapsed = (time - start) / 1000; // seconds
+      function move(t) {
+        const elapsed = (t - start) / 1000; // seconds
         const y = elapsed * speed;
+
         el.style.top = y + "px";
 
         if (y < travelDistance) {
@@ -166,19 +208,21 @@
     }
 
     // ==========================
-    // KEY INPUT (A S L ;)
+    // KEY INPUT
     // ==========================
-    document.addEventListener("keydown", e => {
-      if (!(e.key in keys)) return;
+    document.addEventListener("keydown", (e) => {
+      const key = e.key.toLowerCase();
+      if (!(key in keys)) return;
 
-      songTime = song.currentTime;
+      if (isRecording) {
+        const lane = keys[key];
+        const currentTime = song.currentTime;
 
-      if (isCharting) {
-        notes.push({
-          time: songTime,        // hits when music time == this
-          lane: keys[e.key]
-        });
-        console.log(notes);
+        notes.push({ time: currentTime, lane: lane });
+        console.log("Recorded note:", { time: currentTime, lane: lane });
+
+        // small visual feedback while recording
+        spawnNote(lane);
       }
     });
 
@@ -186,10 +230,9 @@
     // EXPORT CHART
     // ==========================
     function exportChart() {
-      console.log(JSON.stringify(notes, null, 2));
-      alert("Chart printed to console!");
+      console.log("EXPORTED CHART:\n", JSON.stringify(notes, null, 2));
+      alert("Chart printed to the browser console (F12 -> Console).");
     }
   </script>
-
 </body>
 </html>
