@@ -102,6 +102,18 @@
       transform: scaleX(-1); /* mirror selfie */
     }
 
+    /* overlay image on top of camera */
+    .overlay-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* show full overlay */
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
     .countdown-overlay,
     .flash-overlay {
       position: absolute;
@@ -256,6 +268,8 @@
         <div class="col-md-7">
           <div class="camera-wrapper mb-2">
             <video id="camera" autoplay playsinline></video>
+            <!-- overlay on top -->
+            <img id="overlayImage" class="overlay-image" alt="" />
             <div id="countdownOverlay" class="countdown-overlay"></div>
             <div id="flashOverlay" class="flash-overlay"></div>
           </div>
@@ -291,18 +305,7 @@
 
           <div class="preview-frame mt-3">
             <p class="mb-1 small">Preview ♪</p>
-            <img id="previewImage" alt="Your kawaii photo will appear here
-⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⢀⡀⠀
-⣴⠛⠉⠉⠱⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠞⠉⠉⠙⣦
-⣧⠀⠀⠀⠀⠀⠙⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡴⠋⠀⠀⠀⠀⠀⣼
-⠹⣄⠀⠀⠀⠀⠀⠀⠈⠙⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡴⠖⠋⠀⠀⠀⠀⠀⠀⠀⣠⠏
-⠀⠙⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢦⡀⠀⠀⠀⠀⠀⢀⡴⠋⠁⠀⠀⠀⠀⠀⠀⠀⣀⣠⡾⠋⠀
-⠀⠀⡼⠋⠉⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⢹⡄⠀⠀⠀⢠⡟⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠉⠙⢧⠀⠀
-⠀⠈⢧⡀⠀⠀⠀⠀⠀⢀⠀⣴⠋⡉⢳⡄⣷⠀⠀⠀⣾⢠⡞⠉⠙⣦⠀⠀⢀⠀⠀⠀⠀⢀⡼⠀⠀
-⠀⠀⠈⠙⠒⢲⡟⠀⠀⠀⠀⢻⣄⠙⠛⣱⠇⠀⠀⠀⠸⣎⠛⠋⣠⡟⠀⠀⠈⠀⢻⡗⠒⠋⠁⠀⠀
-⠀⠀⠀⠀⠀⠈⠷⣄⣀⣀⣀⣤⠟⠛⠛⠁⠀⠀⠀⠀⠀⠈⠛⠛⠻⣤⣀⣀⣀⣤⠾⠁⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠈⠁⠉⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠉⠈⠀⠀⠀⠀⠀⠀⠀⠀
-⠀" />
+            <img id="previewImage" alt="Your kawaii photo will appear here" />
           </div>
 
           <canvas id="photoCanvas"></canvas>
@@ -380,21 +383,6 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠂⠁⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣄⣰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                                                    ⠀⠀⠀⠀⠀⢀⡤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠘⢄⠙⣠⠇⠀⠀⣠⠠⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠳⠁⠀⠀⢰⠁⠀⠀⠈⠳⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠘⣆⢀⣀⠤⠖⠒⢢⠀⠀⠀⠀⠀
-⠀⠀⠀⢠⡮⠁⠉⠁⠒⠤⢀⡼⠖⠀⠐⣗⠢⡀⢸⣏⡁⠀⠀⢀⡠⠥⠒⠲⠤⢄
-⠀⠀⠀⣼⠀⠀⠀⠀⠀⠀⡞⠀⠀⠀⣀⣈⣍⣈⡿⡘⠁⣹⡚⠁⠀⠀⠀⠀⠀⣼
-⠀⠀⠀⠸⡀⠀⠀⠀⠀⠀⣇⣠⡶⣍⣀⣠⠴⠛⠻⢇⣜⡁⠺⠽⠀⠀⠀⢠⡞⠁
-⠀⠀⠀⢰⠇⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⢷⡀⠀⠀⢀⡏⠀⠀
-⠀⠀⠀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⡉⢳⡄⣸⠁⠀⠀
-⠀⠀⢸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠒⠿⢻⡖⠒⠂
-⠈⠉⠸⡍⠈⠀⠀⠘⣶⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈⢦⣶⡄⠀⠀⠠⢸⠅⣀⠀
-⠀⠀⠔⢷⠈⠀⠀⠀⠘⠛⠁⠀⠀⠀⣤⢤⠀⠀⠀⠀⠸⠿⠁⠀⢀⣠⠟⠀⠀⠀
-⠀⠀⠀⣀⠷⢎⠁⠀⢀⡀⠀⠀⠀⠀⠙⠉⠀⠀⠀⠀⠀⠀⠀⣀⠴⠋⠈⠒⠀⠀
-⠀⠀⠀⠁⠀⠀⠉⡖⠀⠈⠑⡦⠤⠄⠄⠀⠤⠤⠤⡖⠉⠉⠹⡁⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠙⠒⠛⠊⠁⠀⠀⠀⠀⠀⠀⠀⠙⠒⠲⠞⠁⠀⠀⠀⠀⠀
           </div>
         </div>
 
@@ -417,31 +405,102 @@
     const countdownOverlay = document.getElementById("countdownOverlay");
     const flashOverlay = document.getElementById("flashOverlay");
     const filtersContainer = document.getElementById("filtersContainer");
+    const overlayImg = document.getElementById("overlayImage");
 
     let currentStream = null;
     let currentFilterKey = "normal";
 
-    // 🎨 FILTERS: you can tweak CSS values here
+    // 🎨 FILTERS: now include your overlays + special Y2K looks
     const FILTERS = [
       {
         key: "normal",
         label: "✧ Normal",
         css: "none",
+        overlay: null,
       },
       {
-        key: "bmw", // your B&W filter
+        key: "bmw",
         label: "☾ B&W",
         css: "grayscale(1) contrast(1.2)",
+        overlay: null,
       },
       {
         key: "glitch",
         label: "⚡ Glitch",
-        css: "contrast(1.3) saturate(1.5) hue-rotate(10deg)",
+        css: "contrast(1.3) saturate(1.4) hue-rotate(10deg)",
+        overlay: null,
+      },
+
+      // wuts 9 + 10 → dreamy Y2K (less saturated)
+      {
+        key: "wuts9",
+        label: "💗 wuts 9 + 10",
+        css: "brightness(1.25) contrast(1.1) saturate(1.15) hue-rotate(6deg)",
+        overlay: "1_A.png",
+      },
+
+      // 67 → high exposure + more blue meme-ish
+      {
+        key: "sixtyseven",
+        label: "💙 67 glitch",
+        css: "brightness(1.8) contrast(1.45) saturate(1.3) hue-rotate(-30deg)",
+        overlay: "2_A.png",
+      },
+
+      {
+        key: "snow",
+        label: "❄ snow border",
+        css: "none",
+        overlay: "3_A.png",
+      },
+      {
+        key: "pusheen",
+        label: "🐾 pusheen",
+        css: "none",
+        overlay: "4_A.png",
+      },
+      {
+        key: "twentyone",
+        label: "🎵 21 can u do sum",
+        css: "none",
+        overlay: "5_A.png",
+      },
+      {
+        key: "baka",
+        label: "😵‍💫 baka rn",
+        css: "none",
+        overlay: "6_A.png",
+      },
+      {
+        key: "lawyer",
+        label: "⚖️ lawyer dawg",
+        css: "none",
+        overlay: "7_A.png",
+      },
+      {
+        key: "mebtw",
+        label: ":3 this is me btw",
+        css: "none",
+        overlay: "8_A.png",
+      },
+
+      // seen this angel → high exposure dreamy Y2K
+      {
+        key: "angel",
+        label: "😇 seen this Angel?",
+        css: "brightness(1.35) contrast(1.15) saturate(1.25) hue-rotate(14deg)",
+        overlay: "9_A.png",
+      },
+      {
+        key: "hearts",
+        label: "♡ hearts border",
+        css: "none",
+        overlay: "10_A.png",
       },
     ];
 
-    const FILTER_MAP = Object.fromEntries(
-      FILTERS.map(f => [f.key, f.css])
+    const FILTER_CONFIG = Object.fromEntries(
+      FILTERS.map(f => [f.key, f])
     );
 
     function renderFilters() {
@@ -459,7 +518,19 @@
 
     function setFilter(key) {
       currentFilterKey = key;
-      video.style.filter = FILTER_MAP[key] || "none";
+      const cfg = FILTER_CONFIG[key] || { css: "none", overlay: null };
+
+      // live filter on video
+      video.style.filter = cfg.css || "none";
+
+      // overlay image on top
+      if (cfg.overlay) {
+        overlayImg.src = cfg.overlay;
+        overlayImg.style.opacity = 1;
+      } else {
+        overlayImg.style.opacity = 0;
+        overlayImg.removeAttribute("src");
+      }
 
       document
         .querySelectorAll(".filter-pill")
@@ -518,7 +589,10 @@
 
     function captureSingleFrameToCanvas(targetCanvas, x, y, width, height) {
       const ctx = targetCanvas.getContext("2d");
-      ctx.filter = FILTER_MAP[currentFilterKey] || "none";
+      const cfg = FILTER_CONFIG[currentFilterKey] || { css: "none", overlay: null };
+
+      // apply filter to video frame
+      ctx.filter = cfg.css || "none";
 
       // mirror horizontally so it matches on-screen preview
       ctx.save();
@@ -526,6 +600,12 @@
       ctx.scale(-1, 1);
       ctx.drawImage(video, 0, 0, width, height);
       ctx.restore();
+
+      // draw overlay on top (no CSS filter on overlay itself)
+      if (cfg.overlay && overlayImg.complete && overlayImg.naturalWidth > 0) {
+        ctx.filter = "none";
+        ctx.drawImage(overlayImg, x, y, width, height);
+      }
     }
 
     async function captureSinglePhoto() {
