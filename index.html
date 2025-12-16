@@ -38,7 +38,6 @@
     }
 
     .kawaii-card {
-      position: relative; /* for cross + kitty art */
       background: linear-gradient(
         135deg,
         rgba(255, 182, 230, 0.85),
@@ -154,27 +153,10 @@
       border: 1px solid #000;
     }
 
-    .preview-inner {
-      border: 1px dashed var(--aura-hot-pink);
-      border-radius: 0;
-      padding: 0.75rem;
-      min-height: 160px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .preview-frame img {
       max-width: 100%;
       border-radius: 0;
-      display: none; /* shown once a photo is taken */
-    }
-
-    .preview-placeholder {
-      margin: 0;
-      font-size: 0.6rem;   /* smaller wings */
-      line-height: 1;
-      white-space: pre;
+      border: 1px dashed var(--aura-hot-pink);
     }
 
     .kawaii-btn {
@@ -245,7 +227,7 @@
       box-shadow: 0 0 7px rgba(255, 75, 139, 0.7);
     }
 
-    /* Shrunk ASCII art under How it works */
+    /* Cross ASCII art */
     .ascii-art-large {
       margin-top: 0.5rem;
       font-size: 0.35rem;
@@ -254,27 +236,12 @@
       overflow-x: auto;
     }
 
-    /* Right-side cross + Hello Kitty art */
-    .side-art {
-      position: absolute;
-      right: 48px;
-      bottom: 60px;
-      pointer-events: none;
-    }
-
-    .cross-art,
+    /* Hello Kitty: bigger + diagonally down-right from cross */
     .hello-kitty-art {
-      white-space: pre;
-      line-height: 1;
-      font-size: 0.35rem;
-      opacity: 0.55;
-    }
-
-    .hello-kitty-art {
-      margin-top: 1.2rem;
-      font-size: 0.32rem;
-      opacity: 0.7;
-      transform: translateX(32px); /* diagonal to the right */
+      margin-top: 0.6rem;
+      font-size: 0.6rem;      /* bigger */
+      opacity: 0.9;
+      transform: translate(55px, 18px); /* diagonally down-right */
     }
   </style>
 </head>
@@ -339,16 +306,16 @@
           </div>
 
           <div class="status-badge">
+            <!-- optional live dot:
             <span class="status-dot" id="statusDot"></span>
+            -->
             <span id="statusText">Camera not started yet…</span>
           </div>
 
           <div class="preview-frame mt-3">
             <p class="mb-1 small">Preview ♪</p>
-            <div class="preview-inner">
-              <img id="previewImage" alt="Your kawaii photo will appear here" />
-              <pre id="previewPlaceholder" class="preview-placeholder">
-⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⢀⡀⠀
+            <img id="previewImage" alt="Your kawaii photo will appear here
+                                        ⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⢀⡀⠀
 ⣴⠛⠉⠉⠱⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠞⠉⠉⠙⣦
 ⣧⠀⠀⠀⠀⠀⠙⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡴⠋⠀⠀⠀⠀⠀⣼
 ⠹⣄⠀⠀⠀⠀⠀⠀⠈⠙⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡴⠖⠋⠀⠀⠀⠀⠀⠀⠀⣠⠏
@@ -358,8 +325,7 @@
 ⠀⠀⠈⠙⠒⢲⡟⠀⠀⠀⠀⢻⣄⠙⠛⣱⠇⠀⠀⠀⠸⣎⠛⠋⣠⡟⠀⠀⠈⠀⢻⡗⠒⠋⠁⠀⠀
 ⠀⠀⠀⠀⠀⠈⠷⣄⣀⣀⣀⣤⠟⠛⠛⠁⠀⠀⠀⠀⠀⠈⠛⠛⠻⣤⣀⣀⣀⣤⠾⠁⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠈⠁⠉⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠉⠈⠀⠀⠀⠀⠀⠀⠀⠀
-              </pre>
-            </div>
+" />
           </div>
 
           <canvas id="photoCanvas"></canvas>
@@ -386,9 +352,9 @@
             </ul>
           </div>
 
-          <!-- SHRUNK ASCII ART UNDER HOW IT WORKS -->
+          <!-- CROSS ASCII ART -->
           <div class="ascii-art-large">
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -438,18 +404,10 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣄⣰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
           </div>
-        </div>
 
-      </div>
-
-      <!-- Cross + Hello Kitty ASCII in bottom-right -->
-      <div class="side-art">
-        <pre class="cross-art">
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        </pre>
-
-        <pre class="hello-kitty-art">
-⠀⠀⠀⠀⠀⢀⡤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+          <!-- HELLO KITTY ASCII ART (bigger, down-right) -->
+          <div class="hello-kitty-art">
+⠀⠀⠀⠀⠀⠀⢀⡤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠘⢄⠙⣠⠇⠀⠀⣠⠠⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠳⠁⠀⠀⢰⠁⠀⠀⠈⠳⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠘⣆⢀⣀⠤⠖⠒⢢⠀⠀⠀⠀⠀
@@ -464,9 +422,10 @@
 ⠀⠀⠀⣀⠷⢎⠁⠀⢀⡀⠀⠀⠀⠀⠙⠉⠀⠀⠀⠀⠀⠀⠀⣀⠴⠋⠈⠒⠀⠀
 ⠀⠀⠀⠁⠀⠀⠉⡖⠀⠈⠑⡦⠤⠄⠄⠀⠤⠤⠤⡖⠉⠉⠹⡁⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠙⠒⠛⠊⠁⠀⠀⠀⠀⠀⠀⠀⠙⠒⠲⠞⠁⠀⠀⠀⠀⠀⠀
-        </pre>
-      </div>
+          </div>
+        </div>
 
+      </div>
     </div>
   </div>
 
@@ -486,37 +445,102 @@
     const flashOverlay = document.getElementById("flashOverlay");
     const filtersContainer = document.getElementById("filtersContainer");
     const overlayImg = document.getElementById("overlayImage");
-    const previewPlaceholder = document.getElementById("previewPlaceholder");
 
     let currentStream = null;
     let currentFilterKey = "normal";
 
-    // 🎨 FILTERS: overlays + special looks
+    // 🎨 FILTERS: now include your overlays + special Y2K looks
     const FILTERS = [
-      { key: "normal",    label: "⋆.𐙚 ̊ Normal",            css: "none",                                                overlay: null },
-      { key: "bmw",       label: "☯︎ B&W",                   css: "grayscale(1) contrast(1.2)",                           overlay: null },
-      { key: "glitch",    label: "𝄞 warm",                  css: "contrast(1.3) saturate(1.4) hue-rotate(10deg)",        overlay: null },
+      {
+        key: "normal",
+        label: "⋆.𐙚 ̊ Normal",
+        css: "none",
+        overlay: null,
+      },
+      {
+        key: "bmw",
+        label: "☯︎ B&W",
+        css: "grayscale(1) contrast(1.2)",
+        overlay: null,
+      },
+      {
+        key: "glitch",
+        label: "𝄞 warm",
+        css: "contrast(1.3) saturate(1.4) hue-rotate(10deg)",
+        overlay: null,
+      },
 
-      // dreamy Y2K (less saturated)
-      { key: "wuts9",     label: "wuts 9 + 10 ( °ヮ° ) ?",   css: "brightness(1.25) contrast(1.1) saturate(1.15)",        overlay: "1_A.png" },
+      // wuts 9 + 10 → dreamy Y2K (less saturated)
+      {
+        key: "wuts9",
+        label: "wuts 9 + 10 ( °ヮ° ) ?",
+        css: "brightness(1.25) contrast(1.1) saturate(1.15) hue-rotate(0deg)",
+        overlay: "1_A.png",
+      },
 
-      // 67 high exposure & blue
-      { key: "sixtyseven",label: "67",                      css: "brightness(1.8) contrast(1.45) saturate(2.0) hue-rotate(160deg)", overlay: "2_A.png" },
+      // 67 → high exposure + more blue meme-ish
+      {
+        key: "sixtyseven",
+        label: "67",
+        css: "brightness(1.8) contrast(1.45) saturate(2.0) hue-rotate(160deg)",
+        overlay: "2_A.png",
+      },
 
-      { key: "snow",      label: "❄ snowy",                 css: "none", overlay: "3_A.png" },
-      { key: "pusheen",   label: "₍^. .^₎⟆ meow",          css: "none", overlay: "4_A.png" },
-      { key: "twentyone", label: "212121",                  css: "none", overlay: "5_A.png" },
-      { key: "baka",      label: "(╥‸╥) baka ",            css: "none", overlay: "6_A.png" },
-      { key: "lawyer",    label: "(⸝⸝๑﹏๑⸝⸝) lawyer dawg", css: "none", overlay: "7_A.png" },
-      { key: "mebtw",     label: ":3 this is me btw",       css: "none", overlay: "8_A.png" },
+      {
+        key: "snow",
+        label: "❄ snowy",
+        css: "none",
+        overlay: "3_A.png",
+      },
+      {
+        key: "pusheen",
+        label: "₍^. .^₎⟆ meow",
+        css: "none",
+        overlay: "4_A.png",
+      },
+      {
+        key: "twentyone",
+        label: "212121",
+        css: "none",
+        overlay: "5_A.png",
+      },
+      {
+        key: "baka",
+        label: "(╥‸╥) baka ",
+        css: "none",
+        overlay: "6_A.png",
+      },
+      {
+        key: "lawyer",
+        label: "(⸝⸝๑﹏๑⸝⸝) lawyer dawg",
+        css: "none",
+        overlay: "7_A.png",
+      },
+      {
+        key: "mebtw",
+        label: ":3 this is me btw",
+        css: "none",
+        overlay: "8_A.png",
+      },
 
-      // seen this Angel? dreamy Y2K
-      { key: "angel",     label: "ଘ(੭ˊᵕˋ)੭ angel",        css: "brightness(1.35) contrast(1.15) saturate(1.25) hue-rotate(14deg)", overlay: "9_A.png" },
-
-      { key: "hearts",    label: "♡ hai",                   css: "none", overlay: "10_A.png" },
+      // seen this angel → high exposure dreamy Y2K
+      {
+        key: "angel",
+        label: "ଘ(੭ˊᵕˋ)੭ angel",
+        css: "brightness(1.35) contrast(1.15) saturate(1.25) hue-rotate(14deg)",
+        overlay: "9_A.png",
+      },
+      {
+        key: "hearts",
+        label: "♡ hai",
+        css: "none",
+        overlay: "10_A.png",
+      },
     ];
 
-    const FILTER_CONFIG = Object.fromEntries(FILTERS.map(f => [f.key, f]));
+    const FILTER_CONFIG = Object.fromEntries(
+      FILTERS.map(f => [f.key, f])
+    );
 
     function renderFilters() {
       filtersContainer.innerHTML = "";
@@ -535,8 +559,10 @@
       currentFilterKey = key;
       const cfg = FILTER_CONFIG[key] || { css: "none", overlay: null };
 
+      // live filter on video
       video.style.filter = cfg.css || "none";
 
+      // overlay image on top
       if (cfg.overlay) {
         overlayImg.src = cfg.overlay;
         overlayImg.style.opacity = 1;
@@ -547,7 +573,9 @@
 
       document
         .querySelectorAll(".filter-pill")
-        .forEach(p => p.classList.toggle("active", p.dataset.filter === key));
+        .forEach(p =>
+          p.classList.toggle("active", p.dataset.filter === key)
+        );
     }
 
     async function startCamera() {
@@ -558,7 +586,9 @@
         takeBtn.disabled = false;
         takeStripBtn.disabled = false;
         statusText.textContent = "Camera is live ♪ say cheese!";
-        if (statusDot) statusDot.classList.add("live");
+        if (statusDot) {
+          statusDot.classList.add("live");
+        }
       } catch (err) {
         console.error(err);
         statusText.textContent = "Camera access blocked";
@@ -570,6 +600,7 @@
       return !!video.videoWidth && !!video.videoHeight;
     }
 
+    // Countdown overlay: shows 3 → 2 → 1, pink numbers, no dimming
     function showCountdown(seconds) {
       return new Promise((resolve) => {
         let remaining = seconds;
@@ -589,6 +620,7 @@
       });
     }
 
+    // White flash effect (used on strip shots)
     function flashOnce() {
       flashOverlay.style.opacity = 1;
       setTimeout(() => {
@@ -596,32 +628,41 @@
       }, 120);
     }
 
-    function hidePlaceholderShowImage() {
-      if (previewPlaceholder) previewPlaceholder.style.display = "none";
-      previewImage.style.display = "block";
-    }
-
     function captureSingleFrameToCanvas(targetCanvas, x, y, width, height) {
       const ctx = targetCanvas.getContext("2d");
       const cfg = FILTER_CONFIG[currentFilterKey] || { css: "none", overlay: null };
 
+      // apply filter to video frame
       ctx.filter = cfg.css || "none";
 
+      // mirror horizontally so it matches on-screen preview
       ctx.save();
       ctx.translate(x + width, y);
       ctx.scale(-1, 1);
       ctx.drawImage(video, 0, 0, width, height);
       ctx.restore();
 
+      // draw overlay on top (no CSS filter on overlay itself)
       if (cfg.overlay && overlayImg.complete && overlayImg.naturalWidth > 0) {
         ctx.filter = "none";
-        ctx.drawImage(overlayImg, x, y, width, height);
+
+        if (currentFilterKey === "angel") {
+          // 🪽 make wings smaller in the preview (single + strip)
+          const scale = 0.75; // 75% of frame size
+          const ow = width * scale;
+          const oh = height * scale;
+          const ox = x + (width - ow) / 2;
+          const oy = y + (height - oh) / 2;
+          ctx.drawImage(overlayImg, ox, oy, ow, oh);
+        } else {
+          ctx.drawImage(overlayImg, x, y, width, height);
+        }
       }
     }
 
     async function captureSinglePhoto() {
       if (!ensureVideoReady()) return;
-      await showCountdown(3);
+      await showCountdown(3); // countdown before the shot
 
       const width = video.videoWidth;
       const height = video.videoHeight;
@@ -636,7 +677,6 @@
 
       const url = photoCanvas.toDataURL("image/png");
       previewImage.src = url;
-      hidePlaceholderShowImage();
       downloadLink.href = url;
       downloadLink.download = "kawaii-photo.png";
       downloadLink.classList.remove("disabled");
@@ -669,13 +709,12 @@
       for (let i = 0; i < positions.length; i++) {
         await showCountdown(3);
         flashOnce();
-        const [x, y] = positions[i];
-        captureSingleFrameToCanvas(stripCanvas, x, y, singleW, singleH);
+        const [px, py] = positions[i];
+        captureSingleFrameToCanvas(stripCanvas, px, py, singleW, singleH);
       }
 
       const url = stripCanvas.toDataURL("image/png");
       previewImage.src = url;
-      hidePlaceholderShowImage();
       downloadLink.href = url;
       downloadLink.download = "kawaii-strip.png";
       downloadLink.classList.remove("disabled");
@@ -683,6 +722,7 @@
       statusText.textContent = "4-photo strip ready ♡";
     }
 
+    // Init
     renderFilters();
     setFilter("normal");
 
